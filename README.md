@@ -10,4 +10,7 @@ website.
 * SevenSegment
   * DPSwitch - Use DIP switches to enable signle segments. Regular switches
     disable single displays.
-  * _OneTwoThree_ - Display 123.
+  * OneTwoThree - Display 123.
+  * _Counter_ - Count from 0 to 999 and over again.
+  * _AddSubOne_ - Add or subtract 1 with switch.
+  * _DisplayNumber_ - Display number by setting bits with DIP switch.
