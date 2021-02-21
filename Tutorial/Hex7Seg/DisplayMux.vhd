@@ -5,8 +5,8 @@ use ieee.numeric_std.all;
 entity DisplayMux is
     port(
         clk, reset : in  STD_LOGIC;
-        in3, in2, in1, in0 : in  STD_LOGIC_VECTOR (7 downto 0);
-        an : out  STD_LOGIC_VECTOR (3 downto 0);
+        in2, in1, in0 : in  STD_LOGIC_VECTOR (7 downto 0);
+        an : out  STD_LOGIC_VECTOR (2 downto 0);
         sseg : out  STD_LOGIC_VECTOR (7 downto 0)
     );
 end DisplayMux;
@@ -33,21 +33,22 @@ begin
     -- 2 MSBs of counter to control 4-to-1 multiplexing
     -- and to generate active-low enable signal
     sel <= std_logic_vector(q_reg(N-1 downto N-2));
-    process(sel, in0, in1, in2, in3)
+    process(sel, in0, in1, in2)
     begin
         case sel is
             when "00" =>
-                an <= "1110";
+                an <= "110";
                 sseg <= in0;
             when "01" =>
-                an <= "1101";
+                an <= "101";
                 sseg <= in1;
             when "10" =>
-                an <= "1011";
+                an <= "011";
                 sseg <= in2;
+            -- Only three displays
             when others =>
-                an <= "0111";
-                sseg <= in3;
+                an <= "111";
+                sseg <= (others => '1');
         end case;
     end process;
 end Behavioral;
