@@ -23,14 +23,16 @@ begin
         clk => clk,
         reset => reset,
         sw => not btn(0),
-        db => db_btn(0)
+        db_level => open,
+        db_tick => db_btn(0)
     );
     
     btn1_db: entity work.Debounce port map(
         clk => clk,
         reset => reset,
         sw => not btn(1),
-        db => db_btn(1)
+        db_level => open,
+        db_tick => db_btn(1)
     );
     
     -- instantiate a 2^2-by-3 FIFO
