@@ -5,8 +5,9 @@ entity MusicBox_impl is
     port(
         clk              : in  STD_LOGIC;
         btn              : in  STD_LOGIC_VECTOR (5 downto 0);
+        switch           : in  STD_LOGIC_VECTOR(2 downto 0);
         audio_l, audio_r : out STD_LOGIC;
-        logic            : out std_logic
+        logic            : out STD_LOGIC
     );
 end MusicBox_impl;
 
@@ -20,7 +21,8 @@ begin
         reset => '0',
         keys => not btn,
         audio_l => audio,
-        audio_r => audio_r
+        audio_r => audio_r,
+        offset => not switch
     );
     
     audio_l <= audio;
