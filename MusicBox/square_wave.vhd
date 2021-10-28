@@ -8,18 +8,22 @@ entity square_wave is
         TIMING: integer := 12e6;
         -- Frequency in Hz
         FREQ: integer;
-        -- sizeof(TIMING/FREQ) + 3
+        -- sizeof(TIMING/FREQ) + 7
+        -- or
+        -- ceil(log2(TIMING/FREQ)) + 7
         REG_SIZE: integer
     );
     port (
         clk, reset : in  std_logic;
         offset     : in  std_logic_vector(2 downto 0);
+        duty       : in  std_logic_vector(2 downto 0);
         output     : out std_logic
     );
 end square_wave;
 
 architecture Behavioral of square_wave is
     signal r_reg, r_next, r_max: unsigned(REG_SIZE-1 downto 0);
+    signal peak: unsigned(REG_SIZE-2 downto 0);
 begin
 
     -- Register
@@ -41,6 +45,16 @@ begin
         to_unsigned(TIMING/FREQ, REG_SIZE-5) & "00000"   when offset = "010" else
         to_unsigned(TIMING/FREQ, REG_SIZE-6) & "000000"  when offset = "001" else
         to_unsigned(TIMING/FREQ, REG_SIZE-7) & "0000000";
+        
+    peak <=
+                     r_max(REG_SIZE-1 downto 1) when duty = "000" else
+        "0"        & r_max(REG_SIZE-1 downto 2) when duty = "001" else
+        "00"       & r_max(REG_SIZE-1 downto 3) when duty = "010" else
+        "000"      & r_max(REG_SIZE-1 downto 4) when duty = "011" else
+        "0000"     & r_max(REG_SIZE-1 downto 5) when duty = "100" else
+        "00000"    & r_max(REG_SIZE-1 downto 6) when duty = "101" else
+        "000000"   & r_max(REG_SIZE-1 downto 7) when duty = "110" else
+        "0000000"  & r_max(REG_SIZE-1 downto 8);
     
     -- Next-state logic
     r_next <=
@@ -50,7 +64,7 @@ begin
 
     -- Output logic
     output <=
-        '1' when r_reg < r_max(REG_SIZE-1 downto 1) else
+        '1' when r_reg < peak else
         '0';
 
 end Behavioral;
