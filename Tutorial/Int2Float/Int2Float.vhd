@@ -14,6 +14,7 @@ end Int2Float;
 architecture Behavioral of Int2Float is
     signal lead: std_logic_vector(2 downto 0);
     signal unsigned_int: std_logic_vector(7 downto 0);
+    signal unsigned_int_with_lead: std_logic_vector(3 downto 0);
 begin
     -- Sign bit is same
     sign <= int(7);
@@ -47,7 +48,8 @@ begin
             unsigned_int(0)          & "0000000" when others;
 
     -- exp = 8 - lead
-    with unsigned_int(0) & lead select
+    unsigned_int_with_lead <= unsigned_int(0) & lead;
+    with unsigned_int_with_lead select
         exp <=
             "1000" when "0000" | "1000",
             "0111" when "0001" | "1001",

@@ -90,7 +90,7 @@ BEGIN
         wait for period;
         
         assert int = "00010101" and overflow = '0' and underflow = '0'
-        report "Convertion failed for 21" severity failure;
+        report "Conversion failed for 21" severity failure;
         
         -- -21
         sign <= '1';
@@ -99,7 +99,7 @@ BEGIN
         wait for period;
         
         assert int = "11101011" and overflow = '0' and underflow = '0'
-        report "Convertion failed for -21" severity failure;
+        report "Conversion failed for -21" severity failure;
         
         -- -1
         sign <= '1';
@@ -108,7 +108,7 @@ BEGIN
         wait for period;
         
         assert int = "11111111" and overflow = '0' and underflow = '0'
-        report "Convertion failed for -1" severity failure;
+        report "Conversion failed for -1" severity failure;
         
         -- -127
         sign <= '1';
@@ -117,7 +117,7 @@ BEGIN
         wait for period;
         
         assert int = "10000001" and overflow = '0' and underflow = '0'
-        report "Convertion failed for -127" severity failure;
+        report "Conversion failed for -127" severity failure;
         
         -- -128
         sign <= '1';
@@ -126,7 +126,7 @@ BEGIN
         wait for period;
         
         assert int = "10000000" and overflow = '0' and underflow = '0'
-        report "Convertion failed for -128" severity failure;
+        report "Conversion failed for -128" severity failure;
         
         wait for period;
         
@@ -137,7 +137,7 @@ BEGIN
         wait for period;
         
         assert int = "01111111" and overflow = '0' and underflow = '0'
-        report "Convertion failed for 127" severity failure;
+        report "Conversion failed for 127" severity failure;
         
         -- 0
         sign <= '0';
@@ -146,7 +146,7 @@ BEGIN
         wait for period;
         
         assert int = "00000000" and overflow = '0' and underflow = '0'
-        report "Convertion failed for 0" severity failure;
+        report "Conversion failed for 0" severity failure;
         
         -- 200
         sign <= '0';
@@ -155,7 +155,7 @@ BEGIN
         wait for period;
         
         assert overflow = '1'
-        report "Convertion failed for 200" severity failure;
+        report "Conversion failed for 200" severity failure;
         
         -- 1/2
         sign <= '0';
@@ -164,7 +164,7 @@ BEGIN
         wait for period;
         
         assert underflow = '1'
-        report "Convertion failed for 1/2" severity failure;
+        report "Conversion failed for 1/2" severity failure;
         
         wait;
     end process;

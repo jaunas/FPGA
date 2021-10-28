@@ -13,15 +13,21 @@ end MusicBox_impl;
 
 architecture Behavioral of MusicBox_impl is
     signal audio: std_logic;
+    signal keys: std_logic_vector(5 downto 0);
+    signal offset, duty: std_logic_vector(2 downto 0);
 begin
+
+    keys <= not btn;
+    offset <= not switch(2 downto 0);
+    duty <= not switch(5 downto 3);
 
     music_box: entity work.MusicBox
     port map(
         clk => clk,
         reset => '0',
-        keys => not btn,
-        offset => not switch(2 downto 0),
-        duty => not switch(5 downto 3),
+        keys => keys,
+        offset => offset,
+        duty => duty,
         audio => audio
     );
     

@@ -47,6 +47,8 @@ BEGIN
     -- Stimulus process
     stim_proc: process
     begin
+        wait for period;
+        
         int <= "10101010"; -- -86
         wait for period;
         
@@ -89,8 +91,7 @@ BEGIN
         assert sign = '1' and exp = "0001" and frac = "10000000"
         report "Number 1 is not converted correctly" severity failure;
         
-        assert false
-        report "Simulation complete" severity failure;
+        wait;
     end process;
 
 END;
