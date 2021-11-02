@@ -2,31 +2,33 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use ieee.numeric_std.all;
 
--- TODO:
--- 1. Make shortest tick to one cycle
--- 2. Fix problem with all switches on
+-- Generate square wave with m us on, and n us off
+-- 12 MHz => 1 tick = 83.(3) ns => 1 us = 12 ticks
 
 entity SquareWave is
     generic(
-        BITS: integer := 4
+        -- Input bits for m and n
+        BITS: integer := 4;
+        -- Clock ticks for every m or n
+        TICKS: integer := 12;
+        -- ceil(ln2((2^4 - 1) * TICKS)) - BITS
+        EXTRA_BITS: integer := 4
     );
     port(
-        clk   : in  STD_LOGIC;
-        reset : in  STD_LOGIC;
-        m, n  : in  STD_LOGIC_VECTOR (BITS-1 downto 0);
-        wave  : out STD_LOGIC
+        clk   : in  std_logic;
+        reset : in  std_logic;
+        m, n  : in  std_logic_vector(BITS-1 downto 0);
+        wave  : out std_logic
     );
 end SquareWave;
 
 architecture Behavioral of SquareWave is
-    -- We want to start with 1, not 0, so we need +1 size registers
-    signal m_reg, m_next: unsigned(BITS downto 0);
-    signal n_reg, n_next: unsigned(BITS downto 0);
+    signal m_reg, m_next, m_max: unsigned(BITS + EXTRA_BITS - 1 downto 0);
+    signal n_reg, n_next, n_max: unsigned(BITS + EXTRA_BITS - 1 downto 0);
     signal m_tick, n_tick: std_logic;
+    -- level_reg=1 => m is running, level_reg=0 => n is running
     signal level_reg, level_next: std_logic;
 begin
-    -- 12 MHz => 1 tick = 83.(3) ns
-    
     -- register
     process(clk, reset)
     begin
@@ -40,6 +42,9 @@ begin
             level_reg <= level_next;
         end if;
     end process;
+    
+    m_max <= (unsigned(m) * TICKS) - 1;
+    n_max <= (unsigned(n) * TICKS) - 1;
     
     -- next-state logic
     m_next <=        -- run when level is 1
@@ -59,10 +64,10 @@ begin
     
     -- ticks
     m_tick <=
-        '1' when m_reg = unsigned(m)+1 else
+        '1' when m_reg >= m_max else
         '0';
     n_tick <=
-        '1' when n_reg = unsigned(n)+1 else
+        '1' when n_reg >= n_max else
         '0';
     
     -- output logic

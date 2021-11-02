@@ -3,32 +3,28 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity SquareWave_impl is
     port(
-        clk, reset              : in  STD_LOGIC;
-        m, n                    : in  STD_LOGIC_VECTOR (3 downto 0);
-        audio_l, audio_r, logic : out  STD_LOGIC
+        clk, btn   : in  std_logic;
+        switch     : in  std_logic_vector(7 downto 0);
+        logic      : out std_logic
     );
 end SquareWave_impl;
 
 architecture Behavioral of SquareWave_impl is
-    signal wave: std_logic;
-    signal m_shifted, n_shifted: std_logic_vector(15 downto 0);
+    signal reset: std_logic;
+    signal m, n: std_logic_vector(3 downto 0);
 begin
-
-    m_shifted <= (not m) & "000000000000";
-    n_shifted <= (not n) & "000000000000";
+    
+    reset <= not btn;
+    m <= not switch(7 downto 4);
+    n <= not switch(3 downto 0);
 
     square_wave: entity work.SquareWave
-    generic map(BITS => 16)
     port map(
         clk => clk,
-        reset => not reset,
-        m => m_shifted,
-        n => n_shifted,
-        wave => wave
+        reset => reset,
+        m => m,
+        n => n,
+        wave => logic
     );
-
-    audio_l <= wave;
-    audio_r <= wave;
-    logic <= wave;
 end Behavioral;
 

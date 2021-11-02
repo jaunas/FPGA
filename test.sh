@@ -31,7 +31,7 @@ for ((i=0; i<$n; i++)); do
     done
     
     echo "    ==> Running $module"
-    ghdl -r $module
+    ghdl -r $module --stop-time=100ms
     if [ $? -ne 0 ] ; then
         exit=1
     fi

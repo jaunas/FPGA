@@ -13,6 +13,9 @@ ARCHITECTURE behavior OF SquareWave_tb IS
     -- Component Declaration for the Unit Under Test (UUT)
  
     COMPONENT SquareWave
+    GENERIC (
+        TICKS : integer
+    );
     PORT(
          clk : IN  std_logic;
          reset : IN  std_logic;
@@ -33,67 +36,71 @@ ARCHITECTURE behavior OF SquareWave_tb IS
    signal wave : std_logic;
 
    -- Clock period definitions
-   constant clk_period : time := 10 ns;
+   constant clk_period : time := 1 us;
  
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
-   uut: SquareWave PORT MAP (
-          clk => clk,
-          reset => reset,
-          m => m,
-          n => n,
-          wave => wave
-        );
+    uut: SquareWave
+    generic map (
+        TICKS => 4
+    )
+    PORT MAP (
+        clk => clk,
+        reset => reset,
+        m => m,
+        n => n,
+        wave => wave
+    );
 
-   -- Clock process definitions
-   clk_process :process
-   begin
-		clk <= '0';
-		wait for clk_period/2;
-		clk <= '1';
-		wait for clk_period/2;
-   end process;
+    -- Clock process definitions
+    clk_process :process
+    begin
+        clk <= '0';
+        wait for clk_period/2;
+        clk <= '1';
+        wait for clk_period/2;
+    end process;
  
 
     -- Stimulus process
     stim_proc: process
     begin		
-        -- hold reset state for 100 ns.
+        -- hold reset state
         reset <= '1';
-        wait for 100 ns;
+        wait for clk_period;
         reset <= '0';
-
-        wait for clk_period*10;
+        wait for clk_period;
 
         -- insert stimulus here
+        -- 1 => 400 ns
+
+        -- TODO: Try to add assertions
 
         m <= "0001";
         n <= "0001";
-        wait for clk_period*20;
+        wait for clk_period*50;
         
         m <= "0010";
         n <= "0010";
-        wait for clk_period*20;
+        wait for clk_period*100;
 
         m <= "0010";
         n <= "0001";
-        wait for clk_period*20;
+        wait for clk_period*100;
 
         m <= "0001";
         n <= "0010";
-        wait for clk_period*20;
+        wait for clk_period*100;
 
         m <= "0100";
         n <= "0001";
-        wait for clk_period*20;
+        wait for clk_period*200;
         
         m <= "1111";
         n <= "1111";
-        wait for clk_period*20;
-
-        m <= "0000";
-        n <= "0000";
+        wait for clk_period*800;
+        
         wait;
     end process;
 
