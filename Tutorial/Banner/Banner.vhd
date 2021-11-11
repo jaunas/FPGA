@@ -5,7 +5,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity Banner is
     generic(
         W: natural := 4; -- number of address bits for storing digits
-        N: natural := 10 -- number of digits (has to be less than 2**W)
+        N: natural := 10 -- number of digits (has to be not greater than 2**W)
     );
     port(
         clk, reset : in  std_logic;
@@ -24,11 +24,11 @@ architecture Behavioral of Banner is
     );
     
     constant DELAY_RATE: integer := 6000000-1;
-    signal delay_reg, delay_next: unsigned(23 downto 0);
+    signal delay_reg, delay_next: unsigned(22 downto 0);
     signal delay_tick: std_logic;
 
     signal in2_ptr_reg, in1_ptr_reg, in0_ptr_reg: unsigned(W-1 downto 0);
-    signal in0_ptr_next: unsigned(W-1 downto 0);
+    signal in2_ptr_next: unsigned(W-1 downto 0);
     
     signal hex2, hex1, hex0: std_logic_vector(3 downto 0);
 begin
@@ -38,10 +38,10 @@ begin
     begin
         if reset = '1' then
             delay_reg <= (others => '0');
-            in0_ptr_reg <= (others => '0');
+            in2_ptr_reg <= (others => '0');
         elsif rising_edge(clk) then
             delay_reg <= delay_next;
-            in0_ptr_reg <= in0_ptr_next;
+            in2_ptr_reg <= in2_ptr_next;
         end if;
     end process;
     
@@ -52,21 +52,21 @@ begin
     
     delay_tick <= '1' when delay_reg = DELAY_RATE else '0';
     
-    in0_ptr_next <=
-        in0_ptr_reg         when delay_tick = '0' or en = '0' else
-        (others => '0')     when in0_ptr_reg = N-1 and dir = '1' else
-        to_unsigned(N-1, W) when in0_ptr_reg = 0 and dir = '0' else
-        in0_ptr_reg + 1     when dir = '1' else
-        in0_ptr_reg - 1;
+    in2_ptr_next <=
+        in2_ptr_reg         when delay_tick = '0' or en = '0' else
+        (others => '0')     when in2_ptr_reg = N-1 and dir = '1' else
+        to_unsigned(N-1, W) when in2_ptr_reg = 0 and dir = '0' else
+        in2_ptr_reg + 1     when dir = '1' else
+        in2_ptr_reg - 1;
     
     -- output
     in1_ptr_reg <=
-        to_unsigned(N-1, W) when in0_ptr_reg = 0 else
-        in0_ptr_reg - 1;
+        (others => '0') when in2_ptr_reg = N-1 else
+        in2_ptr_reg + 1;
     
-    in2_ptr_reg <=
-        to_unsigned(N-1, W) when in1_ptr_reg = 0 else
-        in1_ptr_reg - 1;
+    in0_ptr_reg <=
+        (others => '0') when in1_ptr_reg = N-1 else
+        in1_ptr_reg + 1;
     
     hex2 <= digits(to_integer(in2_ptr_reg));
     hex1 <= digits(to_integer(in1_ptr_reg));
