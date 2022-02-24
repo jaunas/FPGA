@@ -31,6 +31,7 @@ begin
     display_unit: entity work.HexDisplay
     port map(
         clk   => clk,
+        reset => not reset,
         hex3  => bcd3,
         hex2  => bcd2,
         hex1  => bcd1,
@@ -44,8 +45,8 @@ begin
     si_db_unit: entity work.debounce
     port map(
         clk      => clk,
-        reset    => reset,
-        sw       => si,
+        reset    => not reset,
+        sw       => not si,
         db_level => open,
         db_tick  => si_db
     );

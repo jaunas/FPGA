@@ -3,14 +3,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity HexDisplay is
     port(
-        clk   : in  std_logic;
-        hex3  : in  std_logic_vector(3 downto 0);
-        hex2  : in  std_logic_vector(3 downto 0);
-        hex1  : in  std_logic_vector(3 downto 0);
-        hex0  : in  std_logic_vector(3 downto 0);
-        dp_in : in  std_logic_vector(3 downto 0);
-        an    : out std_logic_vector(3 downto 0);
-        sseg  : out std_logic_vector(7 downto 0)
+        clk, reset             : in  std_logic;
+        hex3, hex2, hex1, hex0 : in  std_logic_vector(3 downto 0);
+        dp_in                  : in  std_logic_vector(3 downto 0);
+        an                     : out std_logic_vector(3 downto 0);
+        sseg                   : out std_logic_vector(7 downto 0)
     );
 end HexDisplay;
 
@@ -48,7 +45,7 @@ begin
     
     display: entity work.DisplayMux port map(
         clk => clk,
-        reset => '0',
+        reset => reset,
         in3 => in3,
         in2 => in2,
         in1 => in1,
