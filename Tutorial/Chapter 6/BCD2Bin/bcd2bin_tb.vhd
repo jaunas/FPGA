@@ -66,14 +66,46 @@ BEGIN
         wait for 100 ns;
         reset <= '0';
 
-        wait for clk_period*10;
-
         -- insert stimulus here
-        bcd <= "10010110";
+        wait for clk_period*10;
+        bcd <= "10010110"; -- 96
         start <= '1';
         wait for clk_period*2;
         start <= '0';
         wait until done_tick = '1';
+        assert bin = "1100000"
+            report "Conversion of 96 failed"
+            severity error;
+
+        wait for clk_period*10;
+        bcd <= "00010110"; -- 16
+        start <= '1';
+        wait for clk_period*2;
+        start <= '0';
+        wait until done_tick = '1';
+        assert bin = "0010000"
+            report "Conversion of 16 failed"
+            severity error;
+
+        wait for clk_period*10;
+        bcd <= "00000001"; -- 1
+        start <= '1';
+        wait for clk_period*2;
+        start <= '0';
+        wait until done_tick = '1';
+        assert bin = "0000001"
+            report "Conversion of 1 failed"
+            severity error;
+
+        wait for clk_period*10;
+        bcd <= "00011001"; -- 1
+        start <= '1';
+        wait for clk_period*2;
+        start <= '0';
+        wait until done_tick = '1';
+        assert bin = "0010011"
+            report "Conversion of 19 failed"
+            severity error;
 
         wait;
     end process;
