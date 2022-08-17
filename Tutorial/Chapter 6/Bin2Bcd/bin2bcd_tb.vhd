@@ -77,10 +77,49 @@ BEGIN
         wait for clk_period*10;
 
         -- insert stimulus here
-        bin <= "0000011111111";
+        bin <= "0000011111111"; -- 0255
         wait for clk_period;
         start <= '1'; wait for clk_period;
         start <= '0'; wait for clk_period;
+        wait until falling_edge(done_tick);
+        assert bcd3 = "0000" report "Failed to convert 0255" severity error;
+        assert bcd2 = "0010" report "Failed to convert 0255" severity error;
+        assert bcd1 = "0101" report "Failed to convert 0255" severity error;
+        assert bcd0 = "0101" report "Failed to convert 0255" severity error;
+        wait for clk_period*10;
+
+        bin <= "1111111111111"; -- 8191
+        wait for clk_period;
+        start <= '1'; wait for clk_period;
+        start <= '0'; wait for clk_period;
+        wait until falling_edge(done_tick);
+        assert bcd3 = "1000" report "Failed to convert 8191" severity error;
+        assert bcd2 = "0001" report "Failed to convert 8191" severity error;
+        assert bcd1 = "1001" report "Failed to convert 8191" severity error;
+        assert bcd0 = "0001" report "Failed to convert 8191" severity error;
+        wait for clk_period*10;
+
+        bin <= "1010110001101"; -- 5517
+        wait for clk_period;
+        start <= '1'; wait for clk_period;
+        start <= '0'; wait for clk_period;
+        wait until falling_edge(done_tick);
+        assert bcd3 = "0101" report "Failed to convert 5517" severity error;
+        assert bcd2 = "0101" report "Failed to convert 5517" severity error;
+        assert bcd1 = "0001" report "Failed to convert 5517" severity error;
+        assert bcd0 = "0111" report "Failed to convert 5517" severity error;
+        wait for clk_period*10;
+
+        bin <= "1000000000000"; -- 4096
+        wait for clk_period;
+        start <= '1'; wait for clk_period;
+        start <= '0'; wait for clk_period;
+        wait until falling_edge(done_tick);
+        assert bcd3 = "0100" report "Failed to convert 4096" severity error;
+        assert bcd2 = "0000" report "Failed to convert 4096" severity error;
+        assert bcd1 = "1001" report "Failed to convert 4096" severity error;
+        assert bcd0 = "0110" report "Failed to convert 4096" severity error;
+        wait for clk_period*10;
 
         wait;
     end process;
